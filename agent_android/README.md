@@ -11,8 +11,10 @@ volle Stunde ausgeführt wird, entspricht dies auch jeder vollen Stunde in
 Wien, einschließlich Sommerzeit. Auf der Website wird `Europe/Vienna`
 verwendet.
 
-Bei einem Treffer stoppt der Agent die automatischen **ÖBB-Fahrplanabfragen**
-und übergibt eine E-Mail an Resend. Netlify startet die Scheduled Function
+Solange keine Direktverbindung gefunden wird, schickt der Agent bei jedem
+stündlichen Lauf eine E-Mail „keine Verbindung im Moment“. Bei einem Treffer
+stoppt er die automatischen **ÖBB-Fahrplanabfragen** und übergibt eine
+E-Mail mit dem Treffer an Resend. Netlify startet die Scheduled Function
 weiterhin stündlich; sie liest dann nur den gespeicherten Status und beendet
 sich. Eine Annahme durch Resend bedeutet nicht zwingend, dass die E-Mail im
 Posteingang zugestellt wurde. Die manuelle Prüfung bleibt unabhängig nutzbar.
@@ -87,6 +89,9 @@ verifizieren. Prüfe die jeweils aktuellen Bedingungen bei Resend.
   manuelle Abfrage starten.
 - Ein fehlgeschlagener Fahrplanabruf wird als Fehler angezeigt, nicht als
   „keine Verbindung“. Beim nächsten Termin wird erneut geprüft.
+- Bei „keine Verbindung“ wird pro Stundenlauf eine Mail mit eigenem
+  Idempotenzschlüssel (Stunde) gesendet; ein Fehler dabei erscheint in den
+  Netlify-Logs.
 - Bei einem Treffer wird der Status vor dem E-Mail-Versuch gespeichert;
   weitere Termine fragen ÖBB nicht erneut ab. Bei E-Mail-Fehlern erfolgen
   Wiederholungen mit einem festen Resend-Idempotenzschlüssel, um doppelte
