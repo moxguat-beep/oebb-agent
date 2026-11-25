@@ -55,19 +55,35 @@ function emailConfig(env) {
   return { apiKey, from, to };
 }
 
-async function sendEmail(config) {
+const FOUND_MAIL = {
+  idempotencyKey: "oebb-wien-trencin-2027-04-28",
+  subject: "ÖBB: Direktverbindung Wien–Trenčín gefunden",
+  text: "Für den 28.04.2027 ist eine Direktverbindung von Wien Hbf (U) nach Trenčín im ÖBB-Fahrplan gelistet.\n\nDie Kaufbarkeit von Tickets wurde nicht geprüft.\n\nhttps://fahrplan.oebb.at/webapp/",
+};
+
+// Ein Schlüssel pro Stunde: Ein Wiederholversuch innerhalb derselben Stunde sendet keine Doppelmail.
+function noConnectionMail(checkedAt) {
+  const time = new Date(checkedAt).toLocaleString("de-AT", { timeZone: "Europe/Vienna" });
+  return {
+    idempotencyKey: `oebb-wien-trencin-2027-04-28-keine-verbindung-${checkedAt.slice(0, 13)}`,
+    subject: "ÖBB: Im Moment keine Direktverbindung Wien–Trenčín",
+    text: `Für den 28.04.2027 ist im Moment keine Direktverbindung von Wien Hbf (U) nach Trenčín im ÖBB-Fahrplan gelistet.\n\nGeprüft: ${time} (Wiener Zeit)\n\nhttps://fahrplan.oebb.at/webapp/`,
+  };
+}
+
+async function sendEmail(config, mail = FOUND_MAIL) {
   const response = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${config.apiKey}`,
       "Content-Type": "application/json",
-      "Idempotency-Key": "oebb-wien-trencin-2027-04-28",
+      "Idempotency-Key": mail.idempotencyKey,
     },
     body: JSON.stringify({
       from: config.from,
       to: [config.to],
-      subject: "ÖBB: Direktverbindung Wien–Trenčín gefunden",
-      text: "Für den 28.04.2027 ist eine Direktverbindung von Wien Hbf (U) nach Trenčín im ÖBB-Fahrplan gelistet.\n\nDie Kaufbarkeit von Tickets wurde nicht geprüft.\n\nhttps://fahrplan.oebb.at/webapp/",
+      subject: mail.subject,
+      text: mail.text,
     }),
     signal: AbortSignal.timeout(6_000),
   });
@@ -106,6 +122,10 @@ async function runAutomatic({ store, checkConnection, send = sendEmail, env = pr
         throw error;
       }
       etag = await saveState(store, state, etag);
+    }
+
+    if (state.result === "not_found") {
+      await send(emailConfig(env), noConnectionMail(state.checkedAt));
     }
 
     if (state.result === "found") {
