@@ -29,12 +29,12 @@ function memoryStore() {
 const env = { RESEND_API_KEY: "test-key", EMAIL_FROM: "from@example.test", EMAIL_TO: "to@example.test" };
 const start = Date.parse("2026-11-25T09:00:00Z");
 
-test("records negative checks and later stops querying and emailing after a match", async () => {
+test("records negative checks, emails each hour without a match, and stops after a match", async () => {
   const store = memoryStore();
   let queries = 0;
-  let sends = 0;
+  const keys = [];
   const checkConnection = async timeout => { assert.equal(timeout, 12_000); return ++queries === 2; };
-  const send = async config => { sends += 1; assert.equal(config.to, env.EMAIL_TO); };
+  const send = async (config, mail) => { keys.push(mail.idempotencyKey); assert.equal(config.to, env.EMAIL_TO); };
   await runAutomatic({ store, checkConnection, send, env, now: () => start });
   assert.deepEqual(publicStatus(store.current()), {
     result: "not_found", checkedAt: "2026-11-25T09:00:00.000Z", notification: null, emailError: false,
@@ -44,7 +44,10 @@ test("records negative checks and later stops querying and emailing after a matc
   assert.equal(store.current().notification, "sent");
   await runAutomatic({ store, checkConnection, send, env, now: () => start + 7_200_000 });
   assert.equal(queries, 2);
-  assert.equal(sends, 1);
+  assert.deepEqual(keys, [
+    "oebb-wien-trencin-2027-04-28-keine-verbindung-2026-11-25T09",
+    "oebb-wien-trencin-2027-04-28",
+  ]);
 });
 
 test("records provider errors as errors, not no connection", async () => {
