@@ -1,0 +1,14 @@
+{
+  "name": "oebb-verbindungscheck",
+  "version": "1.0.0",
+  "private": true,
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "scripts": {
+    "test": "node --test tests/check.test.cjs tests/automatic.test.cjs"
+  },
+  "dependencies": {
+    "@netlify/blobs": "11.1.11"
+  }
+}

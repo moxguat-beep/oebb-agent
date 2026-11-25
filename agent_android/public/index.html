@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#a71930">
+  <meta name="description" content="Direktverbindung Wien Hbf (U) nach Trencin am 28.04.2027 auf Knopfdruck prüfen.">
+  <title>ÖBB-Verbindungscheck</title>
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <main class="card">
+    <header>
+      <span class="badge">DEIN VERBINDUNGSCHECK</span>
+      <h1>Die nächste Reise<br>beginnt hier.</h1>
+      <p class="intro">Ist deine Direktverbindung schon im ÖBB-Fahrplan?</p>
+    </header>
+    <section class="journey" aria-label="Deine Reise">
+      <div class="route">
+        <div><span class="label">VON</span><strong>Wien Hbf (U)</strong></div>
+        <span class="route-line" aria-hidden="true"></span>
+        <div><span class="label">NACH</span><strong>Trencin</strong></div>
+      </div>
+      <div class="trip-details"><span>28. April 2027</span><span>Ohne Umsteigen</span></div>
+    </section>
+    <section class="result" aria-label="Ergebnis" aria-live="polite" aria-atomic="true">
+      <h2 id="result-title">Bereit, wenn du es bist.</h2>
+      <p id="result-message">Mit einem Klick fragst du den aktuellen Fahrplan ab.</p>
+      <p id="checked-at" class="timestamp"></p>
+    </section>
+    <section class="automatic-status" aria-label="Automatische Abfrage" aria-live="polite">
+      <h2>Automatische Abfrage</h2>
+      <p id="automatic-result">Status wird geladen …</p>
+      <p id="automatic-checked-at" class="timestamp"></p>
+    </section>
+    <button id="check-button" type="button">Jetzt prüfen <span aria-hidden="true">→</span></button>
+    <a class="secondary" href="https://fahrplan.oebb.at/webapp/" target="_blank" rel="noopener noreferrer">ÖBB-Fahrplan öffnen ↗</a>
+    <footer>
+      <p>Die automatische Prüfung läuft stündlich, auch wenn diese Seite geschlossen ist.</p>
+      <p>Geprüft wird die Fahrplanlistung, nicht die Kaufbarkeit von Tickets.
+        Unabhängiges Hilfsprogramm, kein offizielles ÖBB-Angebot.</p>
+    </footer>
+    <noscript><p>Bitte JavaScript aktivieren, um die Verbindung zu prüfen.</p></noscript>
+  </main>
+</body>
+</html>

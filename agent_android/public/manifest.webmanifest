@@ -1,0 +1,12 @@
+{
+  "name": "ÖBB-Verbindungscheck",
+  "short_name": "Verbindungscheck",
+  "lang": "de",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f3f1ec",
+  "theme_color": "#a71930",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}
