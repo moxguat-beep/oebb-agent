@@ -6,7 +6,7 @@
   NODE_VERSION = "22"
 
 [functions."scheduled-check"]
-  schedule = "0 * * * *"
+  schedule = "0 5-20 * * *"
 
 [[headers]]
   for = "/*"

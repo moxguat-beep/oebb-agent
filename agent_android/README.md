@@ -6,10 +6,9 @@ von Tickets. Die Website behält den Button **Jetzt prüfen** und zeigt zusätzl
 das Ergebnis und die Zeit der letzten automatischen Prüfung.
 
 Die Netlify Scheduled Function startet stündlich, auch wenn Website, Handy und
-PC ausgeschaltet sind. Der Cron-Ausdruck `0 * * * *` verwendet UTC; weil jede
-volle Stunde ausgeführt wird, entspricht dies auch jeder vollen Stunde in
-Wien, einschließlich Sommerzeit. Auf der Website wird `Europe/Vienna`
-verwendet.
+PC ausgeschaltet sind. Der Cron-Ausdruck `0 5-20 * * *` verwendet UTC und deckt
+07:00–21:00 Wiener Zeit für Sommer- und Winterzeit ab. Die Funktion prüft zusätzlich
+die Stunde in `Europe/Vienna` und beendet sich außerhalb von 07:00–21:00 ohne Prüfung.
 
 Solange keine Direktverbindung gefunden wird, schickt der Agent bei jedem
 stündlichen Lauf eine E-Mail „keine Verbindung im Moment“. Bei einem Treffer
