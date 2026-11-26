@@ -61,11 +61,11 @@ const FOUND_MAIL = {
   text: "Für den 28.04.2027 ist eine Direktverbindung von Wien Hbf (U) nach Trenčín im ÖBB-Fahrplan gelistet.\n\nDie Kaufbarkeit von Tickets wurde nicht geprüft.\n\nhttps://fahrplan.oebb.at/webapp/",
 };
 
-// Ein Schlüssel pro Stunde: Ein Wiederholversuch innerhalb derselben Stunde sendet keine Doppelmail.
+// Ein Schlüssel pro Prüfung: Wiederholversuche derselben Prüfung nutzen den gespeicherten Zeitpunkt und damit denselben Schlüssel und Inhalt.
 function noConnectionMail(checkedAt) {
   const time = new Date(checkedAt).toLocaleString("de-AT", { timeZone: "Europe/Vienna" });
   return {
-    idempotencyKey: `oebb-wien-trencin-2027-04-28-keine-verbindung-${checkedAt.slice(0, 13)}`,
+    idempotencyKey: `oebb-wien-trencin-2027-04-28-keine-verbindung-${checkedAt}`,
     subject: "ÖBB: Im Moment keine Direktverbindung Wien–Trenčín",
     text: `Für den 28.04.2027 ist im Moment keine Direktverbindung von Wien Hbf (U) nach Trenčín im ÖBB-Fahrplan gelistet.\n\nGeprüft: ${time} (Wiener Zeit)\n\nhttps://fahrplan.oebb.at/webapp/`,
   };
@@ -147,7 +147,7 @@ async function runAutomatic({ store, checkConnection, send = sendEmail, env = pr
         etag = await saveState(store, state, etag);
       }
       try {
-        await send(config);
+        await send(config, FOUND_MAIL);
       } catch (error) {
         state = { ...state, emailError: true };
         etag = await saveState(store, state, etag);
