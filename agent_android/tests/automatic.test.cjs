@@ -45,7 +45,7 @@ test("records negative checks, emails each hour without a match, and stops after
   await runAutomatic({ store, checkConnection, send, env, now: () => start + 7_200_000 });
   assert.equal(queries, 2);
   assert.deepEqual(keys, [
-    "oebb-wien-trencin-2027-04-28-keine-verbindung-2026-11-25T09",
+    "oebb-wien-trencin-2027-04-28-keine-verbindung-2026-11-25T09:00:00.000Z",
     "oebb-wien-trencin-2027-04-28",
   ]);
 });
