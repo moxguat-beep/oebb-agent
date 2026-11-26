@@ -89,9 +89,10 @@ verifizieren. Prüfe die jeweils aktuellen Bedingungen bei Resend.
   manuelle Abfrage starten.
 - Ein fehlgeschlagener Fahrplanabruf wird als Fehler angezeigt, nicht als
   „keine Verbindung“. Beim nächsten Termin wird erneut geprüft.
-- Bei „keine Verbindung“ wird pro Stundenlauf eine Mail mit eigenem
-  Idempotenzschlüssel (Stunde) gesendet; ein Fehler dabei erscheint in den
-  Netlify-Logs.
+- Bei „keine Verbindung“ wird pro Prüfung eine Mail mit eigenem
+  Idempotenzschlüssel (Prüfzeitpunkt) gesendet; ein Fehler dabei erscheint in den
+  Netlify-Logs. Ein Run-now innerhalb derselben Stunde wie ein geplanter Lauf
+  kollidiert dadurch nicht mit Resend (HTTP 409).
 - Bei einem Treffer wird der Status vor dem E-Mail-Versuch gespeichert;
   weitere Termine fragen ÖBB nicht erneut ab. Bei E-Mail-Fehlern erfolgen
   Wiederholungen mit einem festen Resend-Idempotenzschlüssel, um doppelte
